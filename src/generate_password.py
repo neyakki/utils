@@ -1,5 +1,5 @@
 import argparse
-import random
+import secrets
 import string
 import sys
 
@@ -11,40 +11,45 @@ def generate_password(
     use_symbols: bool,
 ) -> str:
     """
-    Генерирует безопасный пароль на основе заданных параметров.
+    Генерирует безопасный пароль на основе заданных параметров, используя криптографически безопасный генератор.
 
-    :param length: Длина пароля (должна быть положительным числом)
+    :param length: Длина пароля (должна быть не менее 8 символов)
     :param use_upper: Использовать символы в верхнем регистре
     :param use_digits: Использовать цифры
     :param use_symbols: Использовать специальные символы
     :return: Пароль
     """
-    if length <= 0:
-        sys.exit("Ошибка: длина пароля должна быть положительным числом.")
+    if length < 8:
+        sys.exit("Ошибка: для безопасности длина пароля должна быть не менее 8 символов.")
 
-    char_sets = string.ascii_lowercase
-    if use_upper:
-        char_sets += string.ascii_uppercase
-    if use_digits:
-        char_sets += string.digits
-    if use_symbols:
-        char_sets += "!@#$%^&*()-_=+[]{};:,.<>?"
+    char_sets = {
+        'lower': string.ascii_lowercase,
+        'upper': string.ascii_uppercase if use_upper else '',
+        'digits': string.digits if use_digits else '',
+        'symbols': "!@#$%^&*()-_=+[]{};:,.<>?" if use_symbols else ''
+    }
 
-    # Гарантируем, что хотя бы один символ из каждого выбранного набора попадёт в пароль
+    # Убедимся, что хотя бы один набор символов выбран
+    if not any(char_sets.values()):
+        sys.exit("Ошибка: необходимо выбрать хотя бы один тип символов (верхний регистр, цифры или спецсимволы).")
+
+    # Создаем объединенный набор символов
+    all_chars = ''.join(char_sets.values())
+    
+    # Гарантируем, что хотя бы один символ из каждого выбранного набора будет в пароле
     password = []
-    if use_upper:
-        password.append(random.choice(string.ascii_uppercase))
-    if use_digits:
-        password.append(random.choice(string.digits))
-    if use_symbols:
-        password.append(random.choice("!@#$%^&*()-_=+[]{};:,.<>?"))
+    for char_set in char_sets.values():
+        if char_set:
+            password.append(secrets.choice(char_set))
 
-    # Остальные символы
+    # Добавляем оставшиеся символы
     while len(password) < length:
-        password.append(random.choice(char_sets))
+        password.append(secrets.choice(all_chars))
 
-    random.shuffle(password)
-    return "".join(password)
+    # Перемешиваем для случайного порядка
+    secrets.SystemRandom().shuffle(password)
+    
+    return ''.join(password)
 
 
 def main() -> None:
@@ -56,7 +61,7 @@ def main() -> None:
         "-l",
         type=int,
         default=12,
-        help="Минимальная длина пароля (по умолчанию: 12)",
+        help="Длина пароля (минимум 8, по умолчанию: 12)",
     )
     parser.add_argument(
         "--upper",
@@ -87,3 +92,7 @@ def main() -> None:
     )
 
     print(f"Сгенерированный пароль: {password}")
+
+
+if __name__ == "__main__":
+    main()
