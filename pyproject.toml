@@ -5,11 +5,33 @@ build-backend = "hatchling.build"
 [project]
 name = "utils"
 version = "0.1.0"
-description = "Utils"
+description = "CLI-утилита с набором полезных функций для Linux"
+authors = [
+    {name = "Neyakki", email = "neyakki@example.com"},
+]
+readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.13"
+keywords = ["utils", "cli", "linux"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+]
 dependencies = [
     "hatch>=1.14.1",
 ]
+
+[project.urls]
+"Documentation" = "https://github.com/username/linux-utils"
+"Source Code" = "https://github.com/username/linux-utils"
+"Bug Tracker" = "https://github.com/username/linux-utils/issues"
 
 [project.scripts]
 generate_password = "src.generate_password:main"
