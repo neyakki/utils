@@ -1,0 +1,119 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "utils"
+version = "0.1.0"
+description = "Utils"
+requires-python = ">=3.13"
+dependencies = [
+    "hatch>=1.14.1",
+]
+
+[project.scripts]
+generate_password = "src.generate_password:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.16.1",
+    "pytest>=8.4.1",
+    "ruff>=0.12.0",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.mypy]
+exclude = [
+    ".git",
+    "build",
+    "dist",
+    "__pycache__",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+]
+python_version = "3.13"
+# включить строгую типизацию
+strict = true
+# https://mypy.readthedocs.io/en/stable/running_mypy.html#mapping-file-paths-to-modules
+explicit_package_bases = true
+
+[tool.ruff]
+exclude = [
+    ".git",
+    "build",
+    "dist",
+    "__pycache__",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+]
+line-length = 100
+indent-width = 4
+target-version = "py313"
+
+[tool.ruff.lint]
+# https://docs.astral.sh/ruff/rules/
+select = [
+    "F",
+    "W",
+    "E",
+    "I",
+    "N",
+]
+ignore = [
+    # Рекомендация ruff для фомратера
+    # https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+    "W191",    # табуляция в отсупе
+    "E111",    # Большой отступ
+    "E114",    # Большой отступ (комментаррий)
+    "E117",    # Чрезмерный отступ (комментарий)
+    "D203",    # Перед строкой документации класса требуется 1 пустая строка.
+    "D212",    # Многострочное резюме документации должно начинаться с первой строки.
+    "D206",    # Строка документации должна иметь отступы с пробелами, а не с табуляцией.
+    "D205",    # Между строкой сводки и описанием требуется 1 пустая строка..
+    "D300",    # Использование """
+    "D415",    # Точка в конце
+    "D400",    # Точка в начале
+    "Q",       # Кавычки
+    "COM",     # Запятые
+    "ISC",     # Строковое объединение
+    "RUF001",  # Кириллица
+    "RUF002",  # Кириллица
+    "RUF003",  # Кириллица
+    "PLR0913", # Колличество парраметров которые принимает функция > 7
+    "PLR0917", # Колличество парраметров которые принимает функция > 7
+]
+fixable = ["F", "W", "E", "I", "D"]
+unfixable = ["ALL"]
+preview = true
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 100
+
+[tool.ruff.lint.per-file-ignores]
+"**/{tests,docs,tools}/*" = ["PLR6301", "PLR2004", "D"]
+"**/models/db.py" = ["D101"]
+
+[tool.ruff.lint.pylint]
+max-args = 7
+max-positional-args = 7
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+docstring-code-format = true
+docstring-code-line-length = 100
+
+[tool.uv.workspace]
+members = [
+    "lexor",
+]
