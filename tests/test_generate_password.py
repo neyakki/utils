@@ -9,7 +9,7 @@ import string
 
 import pytest
 
-from src.generate_password import generate_password
+from python_scripts.generate_password import generate_password
 
 
 @pytest.mark.parametrize(
