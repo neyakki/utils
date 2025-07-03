@@ -3,7 +3,6 @@
 set -e
 
 chmod +x ./bash_scripts/*
-cp -r ./bash_scripts/* $HOME/.local/bin/
 
 for file in ./bash_scripts/*.sh; do
     cp "$file" "$HOME/.local/bin/$(basename ${file%.sh})"
