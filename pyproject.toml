@@ -22,9 +22,9 @@ classifiers = [
 ]
 
 [project.urls]
-"Documentation" = "https://github.com/neyakki/linux-utils"
-"Source Code" = "https://github.com/neyakki/linux-utils"
-"Bug Tracker" = "https://github.com/neyakki/linux-utils/issues"
+"Documentation" = "https://github.com/neyakki/utils"
+"Source Code" = "https://github.com/neyakki/utils"
+"Bug Tracker" = "https://github.com/neyakki/utils/issues"
 
 [dependency-groups]
 dev = [
