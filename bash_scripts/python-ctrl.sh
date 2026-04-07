@@ -23,7 +23,7 @@ log_error() {
 
 print_help() {
   cat <<EOF
-Usage: $0 <command> -v <version>
+Usage: $(basename "$0") <command> -v <version>
 
 Command:
   delete              Delete python
@@ -80,7 +80,7 @@ install() {
   sudo mkdir -p "$PYTHON_DIR"
 
   log_info "Конфигурация и компиляция Python $LATEST_VERSION..."
-  echo "configure:\n" | sudo tee /tmp/configure.log >/dev/null
+  printf "configure:\n" | sudo tee /tmp/configure.log >/dev/null
   ./configure \
     --prefix="$PYTHON_DIR" \
     --enable-optimizations \
@@ -88,9 +88,9 @@ install() {
     --enable-shared 2>&1 | sudo tee /tmp/configure.log >/dev/null
 
   CPU_CORES=$(nproc || grep -c ^processor /proc/cpuinfo)
-  echo "make:\n" | sudo tee /tmp/configure.log >/dev/null
+  printf "make:\n" | sudo tee /tmp/configure.log >/dev/null
   make -j "$CPU_CORES" 2>&1 | sudo tee /tmp/configure.log >/dev/null
-  echo "altinstall:\n" | sudo tee /tmp/configure.log >/dev/null
+  printf "altinstall:\n" | sudo tee /tmp/configure.log >/dev/null
   make altinstall 2>&1 | sudo tee /tmp/configure.log >/dev/null
 
   log_info "Создание симлинков и копирование библиотек"
@@ -107,16 +107,16 @@ install() {
 
 delete() {
   log_info "Удаленние python версии $RAW_VERSION"
-  if [ -d $PYTHON_DIR ]; then
-    rm -rf $PYTHON_DIR
+  if [ -d "$PYTHON_DIR" ]; then
+    rm -rf "$PYTHON_DIR"
   fi
-  if [ -a "$LIB_PATH/libpython$VERSION_PREFIX.so.1.0" ]; then
+  if [ -e "$LIB_PATH/libpython$VERSION_PREFIX.so.1.0" ]; then
     rm "$LIB_PATH/libpython$VERSION_PREFIX.so.1.0"
   fi
-  if [ -a "$BIN_PATH/python$VERSION_PREFIX" ]; then
+  if [ -e "$BIN_PATH/python$VERSION_PREFIX" ]; then
     rm "$BIN_PATH/python$VERSION_PREFIX"
   fi
-  if [ -a "$BIN_PATH/pip$VERSION_PREFIX" ]; then
+  if [ -e "$BIN_PATH/pip$VERSION_PREFIX" ]; then
     rm "$BIN_PATH/pip$VERSION_PREFIX"
   fi
   log_info "Python удален"
@@ -157,9 +157,9 @@ LIB_PATH="$ROOT_PATH/lib"
 PYTHON_BASE_DIR="/opt/python"
 PYTHON_DIR="$PYTHON_BASE_DIR/python$RAW_VERSION"
 
-if [ $ACTION == "delete" ]; then
+if [ "$ACTION" == "delete" ]; then
   log_warning "Вы хотите удалить файл? (yes/no)"
-  read answer
+  read -r answer
   case "$answer" in
   [yY] | [yY][eE][sS])
     delete

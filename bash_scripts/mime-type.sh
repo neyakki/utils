@@ -21,7 +21,7 @@ log_error() {
 
 print_help() {
   cat <<EOF
-Usage: $0 <command> -f <desktop-file>
+Usage: $(basename "$0") <command> -f <desktop-file>
 
 Options:
   -f, --file       Path to desktop file
@@ -50,15 +50,15 @@ done
 
 desktop="${file##*/}"
 
-mime_line=$(grep MimeType $file)
+mime_line=$(grep MimeType "$file")
 
 # Удаляем "MimeType=" и последнюю точку с запятой, затем разбиваем
 mime_types=$(echo "$mime_line" | sed 's/MimeType=//' | sed 's/;$//')
 
 # Цикл по всем MIME-типам
 for mime_type in $(echo "$mime_types" | tr ';' ' '); do
-    log_info "Обрабатываем: $mime_type"
-    xdg-mime default "$desktop" "$mime_type"
+  log_info "Обрабатываем: $mime_type"
+  xdg-mime default "$desktop" "$mime_type"
 done
 
 log_info "Для форматов установлено приложение по умолчанию ${desktop}"

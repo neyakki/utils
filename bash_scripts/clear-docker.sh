@@ -23,7 +23,7 @@ log_error() {
 
 print_help() {
   cat <<EOF
-Usage: $0 [options]
+Usage: $(basename "$0") [options]
 
 Cleans up Docker resources. With no options, will prompt to clean everything.
 
@@ -86,7 +86,6 @@ while [[ $# -gt 0 ]]; do
   *)
     log_error "Unknown parameter: $1"
     print_help
-    exit 1
     ;;
   esac
 done
@@ -99,7 +98,7 @@ clean_container() {
       # shellcheck disable=SC2046
       docker stop $(docker ps -q) &>/dev/null || log_warning "No running containers to stop"
     fi
-    
+
     if docker ps -aq &>/dev/null; then
       # shellcheck disable=SC2046
       docker rm $(docker ps -aq) &>/dev/null || log_warning "No containers to remove"
@@ -177,11 +176,11 @@ if [[ $CLEAN_ALL -eq 0 ]]; then
 fi
 
 # If no specific cleanup was requested, ask to clean everything
-if [[ $CONTAINERS -eq 1 ]] && [[ $IMAGES -eq 1 ]] && \
-   [[ $VOLUMES -eq 1 ]] && [[ $NETWORKS -eq 1 ]] && \
-   [[ $BUILDS -eq 1 ]] && [[ $SYSTEM_CACHE -eq 1 ]] && \
-   [[ $CLEAN_ALL -eq 1 ]]; then
-  
+if [[ $CONTAINERS -eq 1 ]] && [[ $IMAGES -eq 1 ]] &&
+  [[ $VOLUMES -eq 1 ]] && [[ $NETWORKS -eq 1 ]] &&
+  [[ $BUILDS -eq 1 ]] && [[ $SYSTEM_CACHE -eq 1 ]] &&
+  [[ $CLEAN_ALL -eq 1 ]]; then
+
   read -rp "Clean ALL Docker resources? [y/N] " -n 1 REPLY
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]; then

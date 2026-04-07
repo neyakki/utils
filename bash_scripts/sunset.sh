@@ -2,7 +2,7 @@
 
 print_help() {
   cat <<EOF
-Usage: $0 <command> 
+Usage: $(basename "$0") <command> 
 
 Command:
     enable           Enable sunset
@@ -15,7 +15,6 @@ EOF
 if [[ -z $1 ]]; then
     echo "Не передана команда"
     print_help
-    exit 1
 fi
 
 case "$1" in
